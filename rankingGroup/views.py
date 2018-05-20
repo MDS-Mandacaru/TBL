@@ -1,6 +1,7 @@
 # Django app
 from django.views import generic
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Core app
@@ -96,9 +97,13 @@ class ShowRankingGroupView(LoginRequiredMixin,
 
                     if not grade.grat == 0:
                         grat = grade.grat
-
-                sum_grades_irat = sum_grades_irat/len(grades)
-                sum_grades_pratical = sum_grades_pratical/len(grades)
+                try:
+                    sum_grades_irat = sum_grades_irat/len(grades)
+                    sum_grades_pratical = sum_grades_pratical/len(grades)
+                except ZeroDivisionError:
+                    print("Error: There is no grades to assing")
+                    messages.error(
+                        self.request,"Your TBL session closed without any assingned grades")
 
                 sum_all_results = sum_grades_irat + grat + sum_grades_pratical
 
